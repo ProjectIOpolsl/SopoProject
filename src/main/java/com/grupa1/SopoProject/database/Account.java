@@ -14,7 +14,6 @@ import javax.persistence.*;
 @Setter
 public class Account {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")

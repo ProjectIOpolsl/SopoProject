@@ -3,16 +3,15 @@ package com.grupa1.SopoProject.resource;
 import com.grupa1.SopoProject.dto.LoginResponse;
 import com.grupa1.SopoProject.dto.WSError;
 import com.grupa1.SopoProject.dto.WSLogin;
+import com.grupa1.SopoProject.handlers.AccountBlockedException;
+import com.grupa1.SopoProject.handlers.NoSuchUserRegistered;
 import com.grupa1.SopoProject.security.CustomUserDetailsService;
-import com.grupa1.SopoProject.security.JwtConfig;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.grupa1.SopoProject.security.TokenUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,9 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Michal on 05.12.2018
@@ -46,7 +43,7 @@ public class LoginResource {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private JwtConfig jwtConfig;
+    private TokenUtil tokenUtil;
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
@@ -60,8 +57,8 @@ public class LoginResource {
     @PostMapping(produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> logIn(@RequestBody WSLogin wsLogin){
         try {
-            String username = wsLogin.getUsername();
-            String password = wsLogin.getPassword();
+            String username = wsLogin.getUsername() != null ? wsLogin.getUsername() : "";
+            String password = wsLogin.getPassword() != null ? wsLogin.getPassword() : "";
 
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
             Authentication authentication = this.authenticationManager.authenticate(token);
@@ -74,18 +71,15 @@ public class LoginResource {
                 roles.add(authority.toString());
             }
 
-            String generatedToken = Jwts.builder()
-                    .setSubject(authentication.getName())
-                    .claim("authorities", authentication.getAuthorities().stream()
-                            .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                    .setIssuedAt(new Date(System.currentTimeMillis()))
-                    .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getExpiration() * 1000))  // in milliseconds
-                    .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
-                    .compact();
-            return new ResponseEntity<>(new LoginResponse(generatedToken,"xd"), HttpStatus.OK);
+            String generatedToken = tokenUtil.generateToken(authentication);
+            return new ResponseEntity<>(new LoginResponse(generatedToken,"NOT_AVALIABLE_YET"), HttpStatus.OK);
 
         } catch (BadCredentialsException bce) {
             WSError wsError = new WSError("Invalid token", "/login");
+            return new ResponseEntity<>(wsError, HttpStatus.FORBIDDEN);
+
+        } catch (AccountBlockedException | NoSuchUserRegistered exc) {
+            WSError wsError = new WSError(exc.getMessage(), "/login");
             return new ResponseEntity<>(wsError, HttpStatus.FORBIDDEN);
 
         } catch (Exception e) {
