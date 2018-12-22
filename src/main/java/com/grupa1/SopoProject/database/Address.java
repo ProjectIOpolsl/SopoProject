@@ -32,4 +32,7 @@ public class Address extends AuditItem{
     @ManyToOne
     @JoinColumn(name = "neighbourhoodId")
     private Neighbourhood neighbourhood;
+
+    public Address() {
+    }
 }

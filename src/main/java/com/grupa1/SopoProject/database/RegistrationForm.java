@@ -35,5 +35,6 @@ public class RegistrationForm {
     @Column(name = "identifierNo")
     private String identifierNo;
 
-
+    public RegistrationForm() {
+    }
 }

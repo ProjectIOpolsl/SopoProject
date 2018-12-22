@@ -38,10 +38,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public org.springframework.security.core.userdetails.User
     loadUserByUsername(String username) throws UsernameNotFoundException {
-
         //TODO implement privilige
         Account account = accountRepository.findByEmail(username);
-        account = new Account(false,AccountType.USER,"xd","xd",new User());
         if(account != null){
             AppUser appUser = new AppUser(account.getId(),account.getEmail(),account.getPassword(),"USER");
             List<GrantedAuthority> grantedAuthorities = AuthorityUtils

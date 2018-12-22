@@ -20,20 +20,20 @@ public class Account {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "accountBlocked")
+    @Column(name = "accountBlocked", nullable = false)
     private Boolean accountBlocked;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "accountType")
+    @Column(name = "accountType", nullable = false)
     private AccountType accountType;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "userId")
     private User user;
 
@@ -43,6 +43,9 @@ public class Account {
         this.password = password;
         this.email = email;
         this.user = user;
+    }
+
+    public Account() {
     }
 
     public Boolean isAccountBlocked(){

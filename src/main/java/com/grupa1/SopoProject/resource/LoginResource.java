@@ -90,7 +90,7 @@ public class LoginResource {
 
         } catch (Exception e) {
             WSError wsError = new WSError("Unknown error occured", "/login");
-            return new ResponseEntity<>(wsError,HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<>(wsError,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

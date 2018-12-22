@@ -12,4 +12,7 @@ public class AuditData {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
+
+    public AuditData() {
+    }
 }

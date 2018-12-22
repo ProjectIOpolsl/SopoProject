@@ -33,9 +33,10 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getPrincipal() + "";
         String password = authentication.getCredentials() + "";
-
+/*        accountRepository.save(new Account(false,AccountType.USER,"$2a$04$gL4jBWHAZO0cy7BosS33r.fWlvmXtYnm8hzdwy8RcR.elQllK.gAi",
+                "xd@op.pl",new User("Tomasz","Wachowski",null,"123123")));*/
         Account account = accountRepository.findByEmail(email);
-        account = new Account(false,AccountType.USER,"xd","xd",new User());
+        //account = new Account(false,AccountType.USER,"xd","xd",new User());
 
         if (account == null) {
             throw new BadCredentialsException("Invalid credentials");

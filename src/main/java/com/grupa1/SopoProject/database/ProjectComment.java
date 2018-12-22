@@ -26,4 +26,7 @@ public class ProjectComment {
 
     @Column(name = "Comment")
     private String comment;
+
+    public ProjectComment() {
+    }
 }

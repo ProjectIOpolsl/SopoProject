@@ -1,6 +1,5 @@
 package com.grupa1.SopoProject.database;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 
@@ -14,4 +13,7 @@ public class Privilige {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
+
+    public Privilige() {
+    }
 }

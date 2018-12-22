@@ -48,4 +48,7 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "commentId")
     )
     private List<ProjectComment> projectComments;
+
+    public Project() {
+    }
 }

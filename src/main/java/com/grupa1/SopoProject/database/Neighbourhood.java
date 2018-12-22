@@ -16,4 +16,7 @@ public class Neighbourhood extends AuditItem{
 
     @Column(name = "Name")
     private String neighbourhoodName;
+
+    public Neighbourhood() {
+    }
 }
