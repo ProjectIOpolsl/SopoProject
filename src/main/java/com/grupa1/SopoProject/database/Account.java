@@ -14,6 +14,7 @@ import javax.persistence.*;
 @Setter
 public class Account {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -35,4 +36,16 @@ public class Account {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
+
+    public Account(Boolean accountBlocked, AccountType accountType, String password, String email, User user) {
+        this.accountBlocked = accountBlocked;
+        this.accountType = accountType;
+        this.password = password;
+        this.email = email;
+        this.user = user;
+    }
+
+    public Boolean isAccountBlocked(){
+        return accountBlocked;
+    }
 }

@@ -10,9 +10,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import javax.persistence.Entity;
 
 @SpringBootApplication
-@EnableJpaRepositories
+@EnableJpaRepositories(basePackages = "com.grupa1.SopoProject")
 @ComponentScan(basePackages = "com.grupa1.SopoProject")
 @EntityScan(basePackages = "com.grupa1.SopoProject")
+
 public class SopoProjectApplication {
 
 	public static void main(String[] args) {

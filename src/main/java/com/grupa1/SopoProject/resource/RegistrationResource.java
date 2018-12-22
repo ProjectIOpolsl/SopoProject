@@ -20,7 +20,8 @@ import javax.xml.ws.Response;
 @RestController
 @RequestMapping("/registration")
 @Api(value="Registration Resource", description="Operations which user can made to send a " +
-        "registration request")
+        "registration request", consumes = "application/json",
+        tags = "Registration Resource")
 public class RegistrationResource {
 
     @ApiOperation(value = "Send registration request")
@@ -30,7 +31,8 @@ public class RegistrationResource {
             @ApiResponse(code = 500, message = "Internal server error. Something went wrong")
     })
     @PostMapping(value = "/register", produces = "application/json")
-    public ResponseEntity register(@RequestBody WSRegistrationForm registrationForm){
+    public ResponseEntity<?> register(@RequestBody WSRegistrationForm registrationForm){
+        //TODO implement
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

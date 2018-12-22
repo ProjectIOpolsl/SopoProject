@@ -2,6 +2,7 @@ package com.grupa1.SopoProject.repositories;
 
 import com.grupa1.SopoProject.database.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,4 +10,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
+
+    @Query("SELECT  a from Account a WHERE a.email = :email")
+    Account findByEmail(String email);
 }
