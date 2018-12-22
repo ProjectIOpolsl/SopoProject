@@ -6,32 +6,34 @@ import lombok.Setter;
 import javax.persistence.*;
 
 /**
- * @author Michal on 05.12.2018
+ * @author Michal on 22.12.2018
  */
 
 @Entity
-@Table(name = "User")
+@Table(name = "RegistrationForm")
 @Getter
 @Setter
-public class User extends AuditItem {
+public class RegistrationForm {
 
     @Id
-    @Column(name = "userId")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long userId;
+    private Long id;
 
     @Column(name = "firstName")
     private String firstName;
 
-    @Column(name = "secondName")
-    private String secondName;
+    @Column(name = "surname")
+    private String surname;
 
-    @OneToOne
-    private Address address;
+    @Column(name = "age")
+    private Integer age;
+
+    @ManyToOne
+    @JoinColumn(name = "neighbourhoodId")
+    private Neighbourhood neighbourhood;
 
     @Column(name = "identifierNo")
     private String identifierNo;
-
 
 
 }
