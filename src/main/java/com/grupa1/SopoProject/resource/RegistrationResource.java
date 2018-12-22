@@ -1,10 +1,15 @@
 package com.grupa1.SopoProject.resource;
 
+import com.grupa1.SopoProject.RegistrationFormService;
+import com.grupa1.SopoProject.database.Neighbourhood;
+import com.grupa1.SopoProject.database.RegistrationForm;
+import com.grupa1.SopoProject.dto.WSError;
 import com.grupa1.SopoProject.dto.WSRegistrationForm;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +29,9 @@ import javax.xml.ws.Response;
         tags = "Registration Resource")
 public class RegistrationResource {
 
+    @Autowired
+    private RegistrationFormService registrationFormService;
+
     @ApiOperation(value = "Send registration request")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Request processed successfully"),
@@ -32,9 +40,21 @@ public class RegistrationResource {
     })
     @PostMapping(value = "/register", produces = "application/json")
     public ResponseEntity<?> register(@RequestBody WSRegistrationForm registrationForm){
-        //TODO implement
+        if(!registrationFormService.validateRegistrationForm(registrationForm)){
+            return new ResponseEntity<>(new WSError("User with such identifier have already sent" +
+                    "request for enrollment","/registration/register"), HttpStatus.BAD_REQUEST);
+        }
+        Neighbourhood neighbourhood = registrationFormService.getRegistrationFormRepository()
+                .findNeighbourhoodByName(registrationForm.getNeighbourhood());
+        RegistrationForm objectToPersist = new RegistrationForm(registrationForm.getFirstName(),
+                registrationForm.getSurname(),registrationForm.getAge(),neighbourhood,
+                registrationForm.getIdentifierNo());
+        registrationFormService.getRegistrationFormRepository().save(objectToPersist);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+
 
 
 }

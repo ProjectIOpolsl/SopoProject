@@ -25,4 +25,6 @@ public class WSRegistrationForm {
 
     @ApiModelProperty(notes = "Identifier of user (eg. PESEL / Passport id)", example = "6969")
     private String identifierNo;
+
+
 }

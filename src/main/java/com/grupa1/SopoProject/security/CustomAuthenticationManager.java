@@ -3,6 +3,8 @@ package com.grupa1.SopoProject.security;
 import com.grupa1.SopoProject.database.Account;
 import com.grupa1.SopoProject.database.AccountType;
 import com.grupa1.SopoProject.database.User;
+import com.grupa1.SopoProject.handlers.AccountBlockedException;
+import com.grupa1.SopoProject.handlers.NoSuchUserRegistered;
 import com.grupa1.SopoProject.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -33,16 +35,13 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getPrincipal() + "";
         String password = authentication.getCredentials() + "";
-/*        accountRepository.save(new Account(false,AccountType.USER,"$2a$04$gL4jBWHAZO0cy7BosS33r.fWlvmXtYnm8hzdwy8RcR.elQllK.gAi",
-                "xd@op.pl",new User("Tomasz","Wachowski",null,"123123")));*/
         Account account = accountRepository.findByEmail(email);
-        //account = new Account(false,AccountType.USER,"xd","xd",new User());
 
         if (account == null) {
-            throw new BadCredentialsException("Invalid credentials");
+            throw new NoSuchUserRegistered("No such user registered");
         }
         if (account.isAccountBlocked()) {
-            throw new DisabledException("Account is blocked");
+            throw new AccountBlockedException("Account has been blocked");
         }
         if (!cryptPasswordEncoder.matches(password, account.getPassword())) {
             throw new BadCredentialsException("Invalid credentials");

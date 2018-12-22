@@ -1,12 +1,15 @@
+/*
 package com.grupa1.SopoProject.security;
 
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
+*/
 /**
  * @author Michal on 22.12.2018
- */
+ *//*
+
 
 public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
 
@@ -53,4 +56,4 @@ public class UserDetails implements org.springframework.security.core.userdetail
     public boolean isEnabled() {
         return false;
     }
-}
+}*/

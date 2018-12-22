@@ -26,5 +26,6 @@ public class WSError {
     public WSError(String message, String path) {
         this.message = message;
         this.path = path;
+        this.timestamp = new Date(System.currentTimeMillis());
     }
 }

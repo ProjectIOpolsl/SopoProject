@@ -2,6 +2,7 @@ package com.grupa1.SopoProject.database;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
 
@@ -35,6 +36,15 @@ public class RegistrationForm {
     @Column(name = "identifierNo")
     private String identifierNo;
 
+    @PersistenceConstructor
     public RegistrationForm() {
+    }
+
+    public RegistrationForm(String firstName, String surname, Integer age, Neighbourhood neighbourhood, String identifierNo) {
+        this.firstName = firstName;
+        this.surname = surname;
+        this.age = age;
+        this.neighbourhood = neighbourhood;
+        this.identifierNo = identifierNo;
     }
 }

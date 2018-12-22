@@ -2,6 +2,7 @@ package com.grupa1.SopoProject.security;
 
 import com.grupa1.SopoProject.database.Account;
 import com.grupa1.SopoProject.database.AccountType;
+import com.grupa1.SopoProject.database.Privilige;
 import com.grupa1.SopoProject.database.User;
 import com.grupa1.SopoProject.repositories.AccountRepository;
 import com.grupa1.SopoProject.repositories.PriviligeRepository;
@@ -40,6 +41,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     loadUserByUsername(String username) throws UsernameNotFoundException {
         //TODO implement privilige
         Account account = accountRepository.findByEmail(username);
+        //List<Privilige> privilige = priviligeRepository.getPriviligesByUserId();
         if(account != null){
             AppUser appUser = new AppUser(account.getId(),account.getEmail(),account.getPassword(),"USER");
             List<GrantedAuthority> grantedAuthorities = AuthorityUtils
