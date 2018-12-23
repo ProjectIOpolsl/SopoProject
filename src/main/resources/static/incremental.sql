@@ -18,6 +18,11 @@ INSERT INTO user VALUES (1,CURRENT_TIMESTAMP,1,null,null,null,null,"Pawel","2412
 INSERT INTO user VALUES (2,CURRENT_TIMESTAMP,1,null,null,null,null,"Michal","sdrq3refwd","KAMINSKI",2);
 INSERT INTO user VALUES (3,CURRENT_TIMESTAMP,1,null,null,null,null,"Tomek","23432edasfa","Wachowski",3);
 
-INSERT INTO account VALUES (1,false,"USER","abc@op.pl","passwd",1);
-INSERT INTO account VALUES (2,false,"USER","cde@op.pl","passwd",2);
-INSERT INTO account VALUES (3,false,"USER","efg@op.pl","passwd",3);
+INSERT INTO account VALUES (1,false,"USER","abc@op.pl","$2a$04$voqBkzyP/ylkz9iVZh4nTuo/rh6ytbYPPv1wiBBj4XROXbNYRgdJm",1);
+INSERT INTO account VALUES (2,false,"USER","cde@op.pl","$2a$04$voqBkzyP/ylkz9iVZh4nTuo/rh6ytbYPPv1wiBBj4XROXbNYRgdJm",2);
+INSERT INTO account VALUES (3,false,"USER","efg@op.pl","$2a$04$voqBkzyP/ylkz9iVZh4nTuo/rh6ytbYPPv1wiBBj4XROXbNYRgdJm",3);
+HASLO: passwd
+
+INSERT INTO privilige values (1,"USER")
+INSERT INTO privilige values (2,"ADMIN")
+INSERT INTO privilige values (3,"SUPER_ADMIN")

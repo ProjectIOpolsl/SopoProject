@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @author Michal on 22.12.2018
@@ -35,6 +36,10 @@ public class Account {
     @OneToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "userId")
     private User user;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "priviligeId")
+    private List<Privilige> priviligeList;
 
     public Account(Boolean accountBlocked, AccountType accountType, String password, String email, User user) {
         this.accountBlocked = accountBlocked;

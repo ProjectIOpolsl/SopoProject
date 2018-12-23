@@ -75,7 +75,7 @@ public class LoginResource {
             return new ResponseEntity<>(new LoginResponse(generatedToken,"NOT_AVALIABLE_YET"), HttpStatus.OK);
 
         } catch (BadCredentialsException bce) {
-            WSError wsError = new WSError("Invalid token", "/login");
+            WSError wsError = new WSError("Invalid credentials", "/login");
             return new ResponseEntity<>(wsError, HttpStatus.FORBIDDEN);
 
         } catch (AccountBlockedException | NoSuchUserRegistered exc) {

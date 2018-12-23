@@ -1,6 +1,8 @@
 package com.grupa1.SopoProject.database;
 
 
+import org.springframework.data.annotation.PersistenceConstructor;
+
 import javax.persistence.*;
 
 /**
@@ -11,9 +13,16 @@ public class Privilige {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "priviligeId")
+    private Long priviligeId;
 
-    public Privilige() {
+    @Column(name = "authority")
+    private String authority;
+
+    public Privilige(String authority) {
+        this.authority = authority;
     }
+
+    @PersistenceConstructor
+    public Privilige() {}
 }

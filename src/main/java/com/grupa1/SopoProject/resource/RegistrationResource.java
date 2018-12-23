@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +52,30 @@ public class RegistrationResource {
                 registrationForm.getIdentifierNo());
         registrationFormService.getRegistrationFormRepository().save(objectToPersist);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Accept registration form send by citizen")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Declined registration form succeed"),
+            @ApiResponse(code = 401, message = "Denied access to this endpoint"),
+            @ApiResponse(code = 400, message = "Invalid request data")
+    })
+    @PostMapping("/declineRegistrationForm")
+    @PreAuthorize(value = "ADMIN")
+    public ResponseEntity<?> declineRegistrationForm(@RequestBody WSRegistrationForm registrationForm){
+        return null;
+    }
+
+    @ApiOperation(value = "Accept registration form send by citizen")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Acceptance registration form succeed"),
+            @ApiResponse(code = 401, message = "Denied access to this endpoint"),
+            @ApiResponse(code = 400, message = "Invalid request data")
+    })
+    @PostMapping("/acceptRegistrationForm")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    public ResponseEntity<?> acceptRegistrationForm(@RequestBody WSRegistrationForm registrationForm){
+        return null;
     }
 
 

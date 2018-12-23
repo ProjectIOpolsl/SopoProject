@@ -39,13 +39,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public org.springframework.security.core.userdetails.User
     loadUserByUsername(String username) throws UsernameNotFoundException {
-        //TODO implement privilige
         Account account = accountRepository.findByEmail(username);
-        //List<Privilige> privilige = priviligeRepository.getPriviligesByUserId();
         if(account != null){
-            AppUser appUser = new AppUser(account.getId(),account.getEmail(),account.getPassword(),"USER");
+            AppUser appUser = new AppUser(account.getId(),account.getEmail(),account.getPassword(),account.getAccountType().toString());
             List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-                    .commaSeparatedStringToAuthorityList("ROLE_" + appUser.getRole());
+                    .commaSeparatedStringToAuthorityList(appUser.getRole());
             return new org.springframework.security.core.userdetails.User
                     (appUser.getUsername(), appUser.getPassword(), grantedAuthorities);
         }

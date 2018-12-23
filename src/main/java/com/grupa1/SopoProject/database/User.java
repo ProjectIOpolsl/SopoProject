@@ -26,13 +26,13 @@ public class User extends AuditItem {
     @Column(name = "secondName", nullable = false)
     private String secondName;
 
-    @OneToOne(optional = true)
+    @OneToOne(optional = false)
     private Address address;
 
-    @Column(name = "identifierNo", nullable = false)
+    @Column(name = "identifierNo", nullable = false, unique = true)
     private String identifierNo;
 
-    @PersistenceConstructor
+
     public User(String firstName, String secondName, Address address, String identifierNo) {
         this.firstName = firstName;
         this.secondName = secondName;
@@ -40,6 +40,7 @@ public class User extends AuditItem {
         this.identifierNo = identifierNo;
     }
 
+    @PersistenceConstructor
     public User() {
     }
 }

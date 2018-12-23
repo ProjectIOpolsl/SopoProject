@@ -14,6 +14,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -46,7 +47,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         if (!cryptPasswordEncoder.matches(password, account.getPassword())) {
             throw new BadCredentialsException("Invalid credentials");
         }
-        //List<Right> userRights = rightRepo.getUserRights(username);
-        return new UsernamePasswordAuthenticationToken(account.getEmail(), password,null);
+        return new UsernamePasswordAuthenticationToken(account.getEmail(), password,
+                AuthorityUtils.commaSeparatedStringToAuthorityList(account.getAccountType().toString()));
     }
 }
