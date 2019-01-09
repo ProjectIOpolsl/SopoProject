@@ -1,6 +1,6 @@
 package com.grupa1.SopoProject.database;
 
-import com.grupa1.SopoProject.dto.UserAlreadyVotedException;
+import com.grupa1.SopoProject.handlers.UserAlreadyVotedException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "Project")
 @Getter
 @Setter
-public class Project {
+public class Project extends AuditItem{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,7 +25,8 @@ public class Project {
     @Column(name = "projectName")
     private String projectName;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
+    @JoinColumn(name = "userId")
     private User user;
 
     @Column(name = "budget")
@@ -56,11 +57,10 @@ public class Project {
             CascadeType.MERGE
     })
     @JoinTable(name = "projectVotingUser",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            joinColumns = @JoinColumn(name = "projectId"),
+            inverseJoinColumns = @JoinColumn(name = "userId")
     )
     private List<User> projectVotingUser = new ArrayList<>();
-
 
     public void addCommentToProject(ProjectComment projectComment){
         this.projectComments.add(projectComment);
@@ -80,6 +80,9 @@ public class Project {
     }
 
     public void vote(User user) throws UserAlreadyVotedException {
+        if(projectVotingUser == null){
+            this.projectVotingUser = new ArrayList<>();
+        }
         if(projectVotingUser.contains(user)){
             throw new UserAlreadyVotedException("User already voted for project: " + projectName);
         }

@@ -2,12 +2,12 @@ package com.grupa1.SopoProject.resource;
 
 import com.grupa1.SopoProject.database.*;
 import com.grupa1.SopoProject.dto.*;
+import com.grupa1.SopoProject.handlers.UserAlreadyVotedException;
+import com.grupa1.SopoProject.handlers.ValidationException;
 import com.grupa1.SopoProject.repositories.*;
 import com.grupa1.SopoProject.security.TokenUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,16 +26,13 @@ import java.util.List;
 @RequestMapping("/projectManagement")
 public class ProjectResource {
 
+    final static Logger logger = Logger.getLogger(ProjectResource.class);
+
     @Autowired
     private TokenUtil tokenUtil;
+
     @Autowired
     private ProjectRepository projectRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ProjectCommentRepository projectCommentRepository;
 
     @Autowired
     private NeighbourhoodRepository neighbourhoodRepository;
@@ -45,34 +42,37 @@ public class ProjectResource {
 
     @ApiOperation(value = "Create project")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Project created", response = LoginResponse.class),
+            @ApiResponse(code = 200, message = "Project created", response = WSLoginResponse.class),
             @ApiResponse(code = 401, message = "Invalid token access or access denied", response = WSError.class),
             @ApiResponse(code = 403, message = "Forbidden access. Your account has been blocked", response = WSError.class)
     })
     @PostMapping(value = "/createProject", produces = "application/json", consumes = "application/json")
-    public ResponseEntity<?> createProject(@RequestBody WSProject wsProject){
+    public ResponseEntity<?> createProject(@ApiParam(hidden = true) @RequestHeader("Authorization") String encoding,
+                                           @RequestBody WSProject wsProject){
+        String email = tokenUtil.getEmailFromToken(encoding);
         try{
             wsProject.validateData();
         } catch(ValidationException ex){
+            logger.info("Create project data validation failed: " + wsProject.getProjectName());
             return new ResponseEntity<>(new WSError(ex.getMessage(),"/projectManagement/createProject"),HttpStatus.BAD_REQUEST);
         }
         Neighbourhood neighbourhood = neighbourhoodRepository.findByName(wsProject.getNeighbourhood());
         if(neighbourhood == null){
+            logger.info("No such neighbourhood in database: " + wsProject.getNeighbourhood());
             return new ResponseEntity<>(new WSError("Invalid neighbourhood parameter","/projectManagement/createProject"),HttpStatus.BAD_REQUEST);
         }
-        User user = userRepository.findUserByIdentifierNo("11111");
-        Project project = new Project(wsProject.getProjectName(),user,wsProject.getBudget(),
+        Account account = accountRepository.findByEmail(email);
+        Project project = new Project(wsProject.getProjectName(),account.getUser(),wsProject.getBudget(),
                 neighbourhood,wsProject.getDescription(),null);
         projectRepository.save(project);
         return new ResponseEntity<>(new WSProject(project.getProjectName(), project.getBudget(),
                 project.getNeighbourhood().getNeighbourhoodName(),
                 project.getDescription()),HttpStatus.OK);
-
     }
 
-    @ApiOperation(value = "Delete project")
+    @ApiOperation(value = "Delete project // NOT VALID")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Project deleted", response = LoginResponse.class),
+            @ApiResponse(code = 200, message = "Project deleted", response = WSLoginResponse.class),
             @ApiResponse(code = 401, message = "Invalid token access or access denied", response = WSError.class),
             @ApiResponse(code = 403, message = "Forbidden access. Your account has been blocked", response = WSError.class)
     })
@@ -84,7 +84,7 @@ public class ProjectResource {
 
     @ApiOperation(value = "Get all projects")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Projects acquired", response = LoginResponse.class),
+            @ApiResponse(code = 200, message = "Projects acquired", response = WSLoginResponse.class),
             @ApiResponse(code = 401, message = "Invalid token access or access denied", response = WSError.class),
             @ApiResponse(code = 403, message = "Forbidden access. Your account has been blocked", response = WSError.class)
     })
@@ -102,7 +102,7 @@ public class ProjectResource {
 
     @ApiOperation(value = "Add comment from project")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Comment added succesfully", response = LoginResponse.class),
+            @ApiResponse(code = 200, message = "Comment added succesfully", response = WSLoginResponse.class),
             @ApiResponse(code = 401, message = "Invalid token access or access denied", response = WSError.class),
             @ApiResponse(code = 403, message = "Forbidden access. Your account has been blocked", response = WSError.class),
             @ApiResponse(code = 500, message = "Internal server error. Issue not know, contact with backend", response = WSError.class)
@@ -110,21 +110,21 @@ public class ProjectResource {
     @PostMapping(value = "/addCommentToProject", produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> addCommentToProject(@RequestBody WSComment wsComment){
         try{
-        Project project = projectRepository.getOne(wsComment.getProjectId());
+        Project project = projectRepository.searchById(wsComment.getProjectId());
         ProjectComment projectComment = new ProjectComment(wsComment.getComment());
         projectComment.addCommentToProject(project);
         project.addCommentToProject(projectComment);
         projectRepository.save(project);
-        projectCommentRepository.save(projectComment);
         } catch( Exception ex){
+            logger.info("Failed to add comment to project number: " +wsComment.getProjectId());
             return new ResponseEntity<>(new WSError(ex.getMessage(),"/projectManagement/addCommentToProject"),HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return  new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value = "Remove comment to project // NOT VALID")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Comment added succesfully", response = LoginResponse.class),
+            @ApiResponse(code = 200, message = "Comment added succesfully", response = WSLoginResponse.class),
             @ApiResponse(code = 401, message = "Invalid token access or access denied", response = WSError.class),
             @ApiResponse(code = 403, message = "Forbidden access. Your account has been blocked", response = WSError.class)
     })
@@ -136,30 +136,32 @@ public class ProjectResource {
 
     @ApiOperation(value = "Vote for project")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Vote completed", response = LoginResponse.class),
+            @ApiResponse(code = 200, message = "Vote completed", response = WSLoginResponse.class),
             @ApiResponse(code = 401, message = "Invalid token access or access denied", response = WSError.class),
             @ApiResponse(code = 403, message = "Forbidden access. Your account has been blocked", response = WSError.class),
-            @ApiResponse(code = 409, message = "User have already voted for this project", response = WSError.class)
+            @ApiResponse(code = 409, message = "User have already voted for this project", response = WSError.class),
+            @ApiResponse(code = 500, message = "Internal server error. Issue not know, contact with backend", response = WSError.class)
     })
     @GetMapping(value = "/voteForProject/project/{projectId}", produces = "application/json")
-    public ResponseEntity<?> voteForProject(@RequestHeader("Authorization") String encoding,
+    public ResponseEntity<?> voteForProject(@ApiParam(hidden = true) @RequestHeader("Authorization") String encoding,
                                             @PathVariable("projectId") Long projectId){
-        if(projectId==null){
-            return new ResponseEntity<>(new WSError("ProjectId not passed","/projectManagement/voteForProject/project/???"),HttpStatus.BAD_REQUEST);
-        }
-        encoding = encoding.substring(7,encoding.length()); // Remove 'Bearer' keyword
         String email = tokenUtil.getEmailFromToken(encoding);
         Project project = projectRepository.searchById(projectId);
         Account account = accountRepository.findByEmail(email);
+        if(project == null){
+            return new ResponseEntity<>(new WSError("Project not found in database!","/projectManagement/voteForProject/project/"+projectId),HttpStatus.CONFLICT);
+        }
         if(projectId != null){
             try {
                 project.vote(account.getUser());
+                projectRepository.save(project);
             } catch (UserAlreadyVotedException ex) {
+                logger.info("User have already voted for project: "  +project.getProjectName());
                 return new ResponseEntity<>(new WSError(ex.getMessage(),"/projectManagement/voteForProject/project/"+projectId),HttpStatus.CONFLICT);
+            } catch (Exception ex){
+                return new ResponseEntity<>(new WSError(ex.getMessage(),"/projectManagement/voteForProject/project/"+projectId),HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-        projectRepository.save(project);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

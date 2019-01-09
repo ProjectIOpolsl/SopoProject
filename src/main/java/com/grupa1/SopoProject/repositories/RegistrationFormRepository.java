@@ -14,6 +14,6 @@ import static org.hibernate.loader.Loader.SELECT;
 @Repository
 public interface RegistrationFormRepository extends JpaRepository<RegistrationForm, Long> {
 
-    @Query("SELECT n from Neighbourhood n WHERE neighbourhoodName = ?1 ")
-    Neighbourhood findNeighbourhoodByName(String neighbourhood);
+    @Query("SELECT r from RegistrationForm r WHERE  r.identifierNo = ?1")
+    void findByIdentifierNo(String identifierNo);
 }

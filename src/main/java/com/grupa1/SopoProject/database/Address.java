@@ -35,4 +35,11 @@ public class Address extends AuditItem{
 
     public Address() {
     }
+
+    public Address(String street, String city, String houseNumber, Neighbourhood neighbourhood) {
+        this.street = street;
+        this.city = city;
+        this.houseNumber = houseNumber;
+        this.neighbourhood = neighbourhood;
+    }
 }

@@ -2,10 +2,12 @@ package com.grupa1.SopoProject.database;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.bytebuddy.description.method.ParameterList;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,19 +36,8 @@ public class User extends AuditItem {
     @Column(name = "identifierNo", nullable = false, unique = true)
     private String identifierNo;
 
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
-    @JoinTable(name = "projectComments",
-            joinColumns = @JoinColumn(name = "projectId"),
-            inverseJoinColumns = @JoinColumn(name = "userId")
-    )
-    private List<ProjectComment> projectComments = new ArrayList<>();
-
     @ManyToMany(mappedBy = "projectVotingUser")
-    private List<Project> project = new ArrayList<>();
-
+    private List<Project> projectList = new ArrayList<>();
 
     public User(String firstName, String secondName, Address address, String identifierNo) {
         this.firstName = firstName;

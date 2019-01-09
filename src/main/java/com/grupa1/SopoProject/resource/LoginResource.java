@@ -1,6 +1,6 @@
 package com.grupa1.SopoProject.resource;
 
-import com.grupa1.SopoProject.dto.LoginResponse;
+import com.grupa1.SopoProject.dto.WSLoginResponse;
 import com.grupa1.SopoProject.dto.WSError;
 import com.grupa1.SopoProject.dto.WSLogin;
 import com.grupa1.SopoProject.handlers.AccountBlockedException;
@@ -50,7 +50,7 @@ public class LoginResource {
 
     @ApiOperation(value = "Log into SOPO project")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Correct authentication", response = LoginResponse.class),
+            @ApiResponse(code = 200, message = "Correct authentication", response = WSLoginResponse.class),
             @ApiResponse(code = 401, message = "Invalid token access", response = WSError.class),
             @ApiResponse(code = 403, message = "Forbidden acces. Your account has been blocked", response = WSError.class)
     })
@@ -72,7 +72,7 @@ public class LoginResource {
             }
 
             String generatedToken = tokenUtil.generateToken(authentication);
-            return new ResponseEntity<>(new LoginResponse(generatedToken,"NOT_AVALIABLE_YET"), HttpStatus.OK);
+            return new ResponseEntity<>(new WSLoginResponse(generatedToken,"NOT_AVALIABLE_YET"), HttpStatus.OK);
 
         } catch (BadCredentialsException bce) {
             WSError wsError = new WSError("Invalid credentials", "/login");

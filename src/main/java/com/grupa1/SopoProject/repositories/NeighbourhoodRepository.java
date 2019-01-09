@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NeighbourhoodRepository extends JpaRepository<Neighbourhood, Long> {
 
-
     @Query("SELECT n from Neighbourhood n WHERE n.neighbourhoodName = ?1")
     Neighbourhood findByName(String name);
 }

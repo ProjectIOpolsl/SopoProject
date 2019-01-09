@@ -1,4 +1,4 @@
-package com.grupa1.SopoProject.dto;
+package com.grupa1.SopoProject.handlers;
 
 /**
  * @author Michal on 09.01.2019

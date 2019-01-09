@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WSListOfProjects {
+public class WSListOfProjects implements DTO{
 
     @JsonProperty("listOfProjects")
     public List<WSProject> listOfProjects;

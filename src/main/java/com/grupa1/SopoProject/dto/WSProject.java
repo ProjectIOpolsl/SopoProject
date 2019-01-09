@@ -2,9 +2,8 @@ package com.grupa1.SopoProject.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.grupa1.SopoProject.database.Project;
-import lombok.Getter;
-import lombok.Setter;
+import com.grupa1.SopoProject.handlers.ValidationException;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -12,17 +11,21 @@ import org.apache.commons.lang3.StringUtils;
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WSProject {
+public class WSProject implements DTO{
     @JsonProperty("projectName")
+    @ApiModelProperty(notes = "Project name", example = "Karuzela kolorowa")
     private String projectName;
 
     @JsonProperty("budget")
+    @ApiModelProperty(notes = "Budget of project", example = "20032.34")
     private Double budget;
 
     @JsonProperty("neighbourhood")
+    @ApiModelProperty(notes = "Neighbourhood code", example = "Wojska Polskiego")
     private String neighbourhood;
 
     @JsonProperty("description")
+    @ApiModelProperty(notes = "Description of project", example = "Projekt fajnej")
     private String description;
 
     public WSProject(String projectName, Double budget, String neighbourhood, String description) {

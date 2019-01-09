@@ -24,4 +24,8 @@ public class Neighbourhood extends AuditItem{
 
     public Neighbourhood() {
     }
+
+    public Neighbourhood(String neighbourhoodName) {
+        this.neighbourhoodName = neighbourhoodName;
+    }
 }

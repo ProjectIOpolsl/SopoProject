@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public class LoginResponse {
+public class WSLoginResponse implements DTO{
 
     @ApiModelProperty(notes = "Token property", example = "werrfdasfzcvre231223rfcs12332edsf")
     private String token;
@@ -22,7 +22,7 @@ public class LoginResponse {
     @ApiModelProperty(notes = "Error message")
     private Date timestamp;
 
-    public LoginResponse(String token, String refreshToken) {
+    public WSLoginResponse(String token, String refreshToken) {
         this.token = token;
         this.refreshToken = refreshToken;
         this.timestamp = new Date();

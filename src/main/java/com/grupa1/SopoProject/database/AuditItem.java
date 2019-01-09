@@ -28,7 +28,7 @@ public class AuditItem {
     private Long auditMU; // Modification User
 
     @Column(name = "auditCU", nullable = false)
-    private Long auditCU; // Creation user
+    private Long auditCU = 1L; // Creation user
 
     @Column(name = "auditMD")
     @Temporal(TemporalType.TIMESTAMP)
@@ -40,7 +40,7 @@ public class AuditItem {
 
     @Column(name = "auditCD", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date auditCD; // Creation date
+    private Date auditCD;
 
     public AuditItem(){
         this.auditCD = new Date();

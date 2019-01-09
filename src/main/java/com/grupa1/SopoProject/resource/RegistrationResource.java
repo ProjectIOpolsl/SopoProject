@@ -5,6 +5,7 @@ import com.grupa1.SopoProject.database.Neighbourhood;
 import com.grupa1.SopoProject.database.RegistrationForm;
 import com.grupa1.SopoProject.dto.WSError;
 import com.grupa1.SopoProject.dto.WSRegistrationForm;
+import com.grupa1.SopoProject.repositories.NeighbourhoodRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -33,6 +34,9 @@ public class RegistrationResource {
     @Autowired
     private RegistrationFormService registrationFormService;
 
+    @Autowired
+    private NeighbourhoodRepository neighbourhoodRepository;
+
     @ApiOperation(value = "Send registration request")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Request processed successfully"),
@@ -45,8 +49,7 @@ public class RegistrationResource {
             return new ResponseEntity<>(new WSError("User with such identifier have already sent" +
                     "request for enrollment","/registration/register"), HttpStatus.BAD_REQUEST);
         }
-        Neighbourhood neighbourhood = registrationFormService.getRegistrationFormRepository()
-                .findNeighbourhoodByName(registrationForm.getNeighbourhood());
+        Neighbourhood neighbourhood = neighbourhoodRepository.findByName(registrationForm.getNeighbourhood());
         RegistrationForm objectToPersist = new RegistrationForm(registrationForm.getFirstName(),
                 registrationForm.getSurname(),registrationForm.getAge(),neighbourhood,
                 registrationForm.getIdentifierNo());

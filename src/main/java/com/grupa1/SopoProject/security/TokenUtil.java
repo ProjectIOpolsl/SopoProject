@@ -32,8 +32,9 @@ public class TokenUtil {
                 .compact();
     }
 
-    public String getEmailFromToken(String token){
-        String name = Jwts.parser().setSigningKey(jwtConfig.getSecret().getBytes()).parseClaimsJws(token).getBody().getSubject();
+    public String getEmailFromToken(String authorizationHeader){
+        authorizationHeader = authorizationHeader.substring(7,authorizationHeader.length()); // Remove 'Bearer' keyword
+        String name = Jwts.parser().setSigningKey(jwtConfig.getSecret().getBytes()).parseClaimsJws(authorizationHeader).getBody().getSubject();
         return name;
     }
 }

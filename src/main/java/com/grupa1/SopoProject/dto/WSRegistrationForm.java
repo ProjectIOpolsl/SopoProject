@@ -9,7 +9,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class WSRegistrationForm {
+public class WSRegistrationForm implements DTO{
 
     @ApiModelProperty(notes = "First name of user", example = "Tomasz")
     private String firstName;

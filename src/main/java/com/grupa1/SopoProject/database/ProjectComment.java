@@ -23,7 +23,7 @@ public class ProjectComment {
     private Long id;
 
     @ManyToMany(mappedBy = "projectComments")
-    private List<Project> project;
+    private List<Project> project = new ArrayList<>();
 
     @Column(name = "Comment")
     private String comment;
@@ -38,7 +38,8 @@ public class ProjectComment {
     public ProjectComment() {
     }
 
-    public ProjectComment(String comment) {
+    public ProjectComment(String comment){
         this.comment = comment;
+
     }
 }

@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class WSError {
+public class WSError implements DTO{
 
     @ApiModelProperty(notes = "Current time")
     private Date timestamp;

@@ -9,11 +9,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class WSLogin {
+public class WSLogin implements DTO{
 
-    @ApiModelProperty(notes = "Username", example = "Tomasz")
+    @ApiModelProperty(notes = "Username", example = "abc@op.pl")
     private String username;
 
-    @ApiModelProperty(notes = "Password", example = "lubieRobicSprawka")
+    @ApiModelProperty(notes = "Password", example = "passwd")
     private String password;
 }
