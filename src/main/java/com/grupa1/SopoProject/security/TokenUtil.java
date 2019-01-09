@@ -1,5 +1,7 @@
 package com.grupa1.SopoProject.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,6 @@ public class TokenUtil {
     @Autowired
     private JwtConfig jwtConfig;
 
-
     public String generateToken(Authentication authentication){
         return Jwts.builder()
                 .setSubject(authentication.getName())
@@ -29,5 +30,10 @@ public class TokenUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getExpiration() * 1000))  // in milliseconds
                 .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
                 .compact();
+    }
+
+    public String getEmailFromToken(String token){
+        String name = Jwts.parser().setSigningKey(jwtConfig.getSecret().getBytes()).parseClaimsJws(token).getBody().getSubject();
+        return name;
     }
 }

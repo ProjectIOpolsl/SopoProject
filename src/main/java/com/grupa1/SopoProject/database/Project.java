@@ -1,9 +1,11 @@
 package com.grupa1.SopoProject.database;
 
+import com.grupa1.SopoProject.dto.UserAlreadyVotedException;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,8 +49,41 @@ public class Project {
             joinColumns = @JoinColumn(name = "projectId"),
             inverseJoinColumns = @JoinColumn(name = "commentId")
     )
-    private List<ProjectComment> projectComments;
+    private List<ProjectComment> projectComments = new ArrayList<>();
+
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "projectVotingUser",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> projectVotingUser = new ArrayList<>();
+
+
+    public void addCommentToProject(ProjectComment projectComment){
+        this.projectComments.add(projectComment);
+    }
 
     public Project() {
+    }
+
+    public Project(String projectName, User user, Double budget, Neighbourhood neighbourhood, String description, List<ProjectComment> projectComments) {
+        this.projectName = projectName;
+        this.user = user;
+        this.budget = budget;
+        this.neighbourhood = neighbourhood;
+        this.description = description;
+        this.voteAmount = 0L;
+        this.projectComments = projectComments;
+    }
+
+    public void vote(User user) throws UserAlreadyVotedException {
+        if(projectVotingUser.contains(user)){
+            throw new UserAlreadyVotedException("User already voted for project: " + projectName);
+        }
+        voteAmount++;
+        projectVotingUser.add(user);
     }
 }

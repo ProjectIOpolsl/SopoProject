@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +28,17 @@ public class ProjectComment {
     @Column(name = "Comment")
     private String comment;
 
+    public void addCommentToProject(Project project){
+        if(this.project == null){
+            this.project = new ArrayList<>();
+        }
+        this.project.add(project);
+    }
+
     public ProjectComment() {
+    }
+
+    public ProjectComment(String comment) {
+        this.comment = comment;
     }
 }
