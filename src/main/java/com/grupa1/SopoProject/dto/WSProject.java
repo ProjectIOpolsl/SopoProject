@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.grupa1.SopoProject.handlers.ValidationException;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -11,7 +13,15 @@ import org.apache.commons.lang3.StringUtils;
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
 public class WSProject implements DTO{
+
+
+    @JsonProperty("id")
+    @ApiModelProperty(notes = "Project id", example = "1")
+    private Long id;
+
     @JsonProperty("projectName")
     @ApiModelProperty(notes = "Project name", example = "Karuzela kolorowa")
     private String projectName;
@@ -27,6 +37,24 @@ public class WSProject implements DTO{
     @JsonProperty("description")
     @ApiModelProperty(notes = "Description of project", example = "Projekt fajnej")
     private String description;
+
+    @JsonProperty("Address")
+    @ApiModelProperty(notes = "Address", example = "Kamienna 15A")
+    private String address;
+
+    @JsonProperty("voteAmount")
+    @ApiModelProperty(notes = "VoteAmount", example = "124")
+    private Long votesAmount;
+
+    public WSProject(Long id, String projectName, Double budget, String neighbourhood, String description, String address, Long votesAmount) {
+        this.id = id;
+        this.projectName = projectName;
+        this.budget = budget;
+        this.neighbourhood = neighbourhood;
+        this.description = description;
+        this.address = address;
+        this.votesAmount = votesAmount;
+    }
 
     public WSProject(String projectName, Double budget, String neighbourhood, String description) {
         this.projectName = projectName;

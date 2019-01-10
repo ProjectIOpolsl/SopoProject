@@ -28,6 +28,10 @@ public class ProjectComment {
     @Column(name = "Comment")
     private String comment;
 
+    @Column(name = "userEmail")
+    private String emial;
+
+
     public void addCommentToProject(Project project){
         if(this.project == null){
             this.project = new ArrayList<>();
@@ -38,8 +42,9 @@ public class ProjectComment {
     public ProjectComment() {
     }
 
-    public ProjectComment(String comment){
+    public ProjectComment(String comment, String emial){
         this.comment = comment;
+        this.emial = emial;
 
     }
 }

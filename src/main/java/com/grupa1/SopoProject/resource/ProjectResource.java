@@ -63,11 +63,11 @@ public class ProjectResource {
         }
         Account account = accountRepository.findByEmail(email);
         Project project = new Project(wsProject.getProjectName(),account.getUser(),wsProject.getBudget(),
-                neighbourhood,wsProject.getDescription(),null);
-        projectRepository.save(project);
-        return new ResponseEntity<>(new WSProject(project.getProjectName(), project.getBudget(),
+                neighbourhood,wsProject.getDescription(),null,wsProject.getAddress());
+        project = projectRepository.save(project);
+        return new ResponseEntity<>(new WSProject(project.getId(),project.getProjectName(), project.getBudget(),
                 project.getNeighbourhood().getNeighbourhoodName(),
-                project.getDescription()),HttpStatus.OK);
+                project.getDescription(),project.getAddress(),project.getVoteAmount()),HttpStatus.OK);
     }
 
     @ApiOperation(value = "Delete project // NOT VALID")
@@ -84,7 +84,7 @@ public class ProjectResource {
 
     @ApiOperation(value = "Get all projects")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Projects acquired", response = WSLoginResponse.class),
+            @ApiResponse(code = 200, message = "Projects acquired", response = WSListOfProjects.class),
             @ApiResponse(code = 401, message = "Invalid token access or access denied", response = WSError.class),
             @ApiResponse(code = 403, message = "Forbidden access. Your account has been blocked", response = WSError.class)
     })
@@ -93,25 +93,31 @@ public class ProjectResource {
         List<Project> listOfProjects = projectRepository.findAll();
         List<WSProject> listOfWSProjects = new ArrayList<>();
         listOfProjects.stream().forEach( p -> {
-            listOfWSProjects.add(new WSProject(p.getProjectName(),p.getBudget(),p.getNeighbourhood().getNeighbourhoodName(),
-            p.getDescription()));
-        });
+            listOfWSProjects.add(new WSProject(p.getId(),p.getProjectName(),p.getBudget(),p.getNeighbourhood().getNeighbourhoodName(),
+            p.getDescription(),p.getAddress(),p.getVoteAmount()));
+            });
         WSListOfProjects wsListOfProjects = new WSListOfProjects(listOfWSProjects);
         return new ResponseEntity<>(wsListOfProjects,HttpStatus.OK);
     }
 
     @ApiOperation(value = "Add comment from project")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Comment added succesfully", response = WSLoginResponse.class),
+            @ApiResponse(code = 200, message = "Comment added succesfully"),
             @ApiResponse(code = 401, message = "Invalid token access or access denied", response = WSError.class),
             @ApiResponse(code = 403, message = "Forbidden access. Your account has been blocked", response = WSError.class),
             @ApiResponse(code = 500, message = "Internal server error. Issue not know, contact with backend", response = WSError.class)
     })
     @PostMapping(value = "/addCommentToProject", produces = "application/json", consumes = "application/json")
-    public ResponseEntity<?> addCommentToProject(@RequestBody WSComment wsComment){
+    public ResponseEntity<?> addCommentToProject(@ApiParam(hidden = true) @RequestHeader("Authorization") String encoding,
+                                                 @RequestBody WSComment wsComment){
+        String email = tokenUtil.getEmailFromToken(encoding);
         try{
         Project project = projectRepository.searchById(wsComment.getProjectId());
-        ProjectComment projectComment = new ProjectComment(wsComment.getComment());
+        if(project == null){
+            logger.info("No such project found: " +wsComment.getProjectId());
+            return new ResponseEntity<>(new WSError("No such project found "+wsComment.getProjectId(),"/projectManagement/addCommentToProject"),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        ProjectComment projectComment = new ProjectComment(wsComment.getComment(),email);
         projectComment.addCommentToProject(project);
         project.addCommentToProject(projectComment);
         projectRepository.save(project);
@@ -136,7 +142,7 @@ public class ProjectResource {
 
     @ApiOperation(value = "Vote for project")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Vote completed", response = WSLoginResponse.class),
+            @ApiResponse(code = 200, message = "Vote completed", response = WSProject.class),
             @ApiResponse(code = 401, message = "Invalid token access or access denied", response = WSError.class),
             @ApiResponse(code = 403, message = "Forbidden access. Your account has been blocked", response = WSError.class),
             @ApiResponse(code = 409, message = "User have already voted for this project", response = WSError.class),
@@ -162,6 +168,27 @@ public class ProjectResource {
                 return new ResponseEntity<>(new WSError(ex.getMessage(),"/projectManagement/voteForProject/project/"+projectId),HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        return new ResponseEntity<>(new WSProject(project.getId(),project.getProjectName(),project.getBudget(),
+                project.getNeighbourhood().getNeighbourhoodName(),project.getDescription(),project.getAddress(),project.getVoteAmount()),HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Get comments from project")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Comments pulled", response = WSListOfComments.class),
+            @ApiResponse(code = 401, message = "Invalid token access or access denied", response = WSError.class),
+            @ApiResponse(code = 403, message = "Forbidden access. Your account has been blocked", response = WSError.class),
+            @ApiResponse(code = 500, message = "Internal server error. Issue not know, contact with backend", response = WSError.class)
+    })
+    @GetMapping(value = "/getComments/project/{projectId}", produces = "application/json")
+    public ResponseEntity<?> getComments(@PathVariable("projectId") Long projectId){
+        Project project = projectRepository.searchById(projectId);
+        List<ProjectComment> projectCommentList;
+        WSListOfComments listOfComments = new WSListOfComments();
+        if(project!=null){
+            projectCommentList = project.getProjectComments() != null ? project.getProjectComments() : new ArrayList<>();
+            projectCommentList.stream().forEach( p -> listOfComments.addToList(new WSComment(p.getComment(),project.getId(),p.getEmial())));
+        }
+        return new ResponseEntity<>(listOfComments,HttpStatus.OK);
     }
 }

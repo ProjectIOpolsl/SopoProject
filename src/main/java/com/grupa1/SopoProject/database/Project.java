@@ -39,6 +39,9 @@ public class Project extends AuditItem{
     @Column(name = "description")
     private String description;
 
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "voteAmount")
     private Long voteAmount;
 
@@ -69,7 +72,7 @@ public class Project extends AuditItem{
     public Project() {
     }
 
-    public Project(String projectName, User user, Double budget, Neighbourhood neighbourhood, String description, List<ProjectComment> projectComments) {
+    public Project(String projectName, User user, Double budget, Neighbourhood neighbourhood, String description, List<ProjectComment> projectComments, String address) {
         this.projectName = projectName;
         this.user = user;
         this.budget = budget;
@@ -77,6 +80,7 @@ public class Project extends AuditItem{
         this.description = description;
         this.voteAmount = 0L;
         this.projectComments = projectComments;
+        this.address = address;
     }
 
     public void vote(User user) throws UserAlreadyVotedException {

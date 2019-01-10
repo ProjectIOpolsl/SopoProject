@@ -20,11 +20,16 @@ public class WSComment implements DTO{
     @ApiModelProperty(notes = "Project id", example = "1")
     private Long projectId;
 
+    @JsonProperty("email")
+    @ApiModelProperty(hidden = true)
+    private String email;
+
     public WSComment() {
     }
 
-    public WSComment(String comment, Long projectId) {
+    public WSComment(String comment, Long projectId, String email) {
         this.comment = comment;
         this.projectId = projectId;
+        this.email = email;
     }
 }
