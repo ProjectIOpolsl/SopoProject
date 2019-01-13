@@ -17,14 +17,23 @@ public class WSRegistrationForm implements DTO{
     @ApiModelProperty(notes = "Surname of user", example = "Wachowski")
     private String surname;
 
-    @ApiModelProperty(notes = "Age of user", example = "69")
+    @ApiModelProperty(hidden = true, notes = "Age of user", example = "69")
     private Integer age;
 
-    @ApiModelProperty(notes = "Neighbourhood name of user", example = "Politechnika")
+    @ApiModelProperty(hidden = true, notes = "Neighbourhood name of user", example = "Politechnika")
     private String neighbourhood;
 
     @ApiModelProperty(notes = "Identifier of user (eg. PESEL / Passport id)", example = "6969")
     private String identifierNo;
+
+    @ApiModelProperty(notes = "Password", example = "tajneHaslo")
+    private String password;
+
+    @ApiModelProperty(notes = "Email", example = "email")
+    private String email;
+
+    @ApiModelProperty(notes = "Address", example = "Stawowa 21")
+    private String address;
 
 
 }

@@ -36,12 +36,24 @@ public class RegistrationForm {
     @Column(name = "identifierNo")
     private String identifierNo;
 
+    @Column(name = "Address")
+    private String address;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "password")
+    private String password;
+
     @PersistenceConstructor
     public RegistrationForm() {
     }
 
-    public RegistrationForm(String firstName, String surname, Integer age, Neighbourhood neighbourhood, String identifierNo) {
+    public RegistrationForm(String firstName, String surname, Integer age, Neighbourhood neighbourhood, String identifierNo,
+                            String email, String password) {
         this.firstName = firstName;
+        this.password = password;
+        this.email = email;
         this.surname = surname;
         this.age = age;
         this.neighbourhood = neighbourhood;

@@ -25,7 +25,9 @@ public class RegistrationFormService {
     private UserRepository userRepository;
 
     public boolean validateRegistrationForm(WSRegistrationForm wsRegistrationForm){
-        if(wsRegistrationForm.getAge() != null && wsRegistrationForm.getAge() < 18 ){
+        if(wsRegistrationForm.getAddress() == null){
+            return false;
+        } else if(wsRegistrationForm.getEmail() == null) {
             return false;
         } else if (wsRegistrationForm.getNeighbourhood() != null){
             Neighbourhood neighbourhood = neighbourhoodRepository.findByName(wsRegistrationForm.getNeighbourhood());

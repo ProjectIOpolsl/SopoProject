@@ -49,10 +49,11 @@ public class RegistrationResource {
             return new ResponseEntity<>(new WSError("User with such identifier have already sent" +
                     "request for enrollment","/registration/register"), HttpStatus.BAD_REQUEST);
         }
-        Neighbourhood neighbourhood = neighbourhoodRepository.findByName(registrationForm.getNeighbourhood());
+        //TODO hardcoded
+        Neighbourhood neighbourhood = neighbourhoodRepository.findByName("Wojska Polskiego");
         RegistrationForm objectToPersist = new RegistrationForm(registrationForm.getFirstName(),
                 registrationForm.getSurname(),registrationForm.getAge(),neighbourhood,
-                registrationForm.getIdentifierNo());
+                registrationForm.getIdentifierNo(),registrationForm.getEmail(),registrationForm.getPassword());
         registrationFormService.getRegistrationFormRepository().save(objectToPersist);
         return new ResponseEntity<>(HttpStatus.OK);
     }
