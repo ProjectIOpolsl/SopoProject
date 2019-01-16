@@ -1,5 +1,6 @@
 package com.grupa1.SopoProject.forApiDocs;
 
+import com.grupa1.SopoProject.handlers.InvalidProjectExcpetion;
 import com.grupa1.SopoProject.handlers.ValidationException;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -29,15 +30,15 @@ public class WSCreateNewProject {
     private String address;
 
 
-    public boolean validateData() throws ValidationException {
+    public boolean validateData() throws ValidationException, InvalidProjectExcpetion {
         if(StringUtils.isBlank(projectName)){
             throw new ValidationException("Project name");
         } else if(budget == null){
             throw new ValidationException("Budget");
         } else if(StringUtils.isBlank(neighbourhood)){
             throw new ValidationException("Neighbourhood");
-        } else if(StringUtils.isBlank(description)){
-            throw new ValidationException("Description");
+        } else if(StringUtils.isBlank(description) || description.length() > 2000){
+            throw new InvalidProjectExcpetion("Project doesn't have description or have too big. Constraint is set to 2000") ;
         }
         return  true;
     }

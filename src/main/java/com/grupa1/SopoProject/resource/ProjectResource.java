@@ -3,6 +3,7 @@ package com.grupa1.SopoProject.resource;
 import com.grupa1.SopoProject.database.*;
 import com.grupa1.SopoProject.dto.*;
 import com.grupa1.SopoProject.forApiDocs.WSCreateNewProject;
+import com.grupa1.SopoProject.handlers.InvalidProjectExcpetion;
 import com.grupa1.SopoProject.handlers.UserAlreadyVotedException;
 import com.grupa1.SopoProject.handlers.ValidationException;
 import com.grupa1.SopoProject.repositories.*;
@@ -53,7 +54,10 @@ public class ProjectResource {
         String email = tokenUtil.getEmailFromToken(encoding);
         try{
             wsProject.validateData();
-        } catch(ValidationException ex){
+        } catch(InvalidProjectExcpetion ex){
+            logger.info("Create project data validation failed: " + wsProject.getProjectName()+"\n"+ex.getMessage());
+            return new ResponseEntity<>(new WSError(ex.getMessage(),"/projectManagement/createProject"),HttpStatus.BAD_REQUEST);
+        } catch (ValidationException ex){
             logger.info("Create project data validation failed: " + wsProject.getProjectName());
             return new ResponseEntity<>(new WSError(ex.getMessage(),"/projectManagement/createProject"),HttpStatus.BAD_REQUEST);
         }

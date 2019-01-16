@@ -15,5 +15,8 @@ import static org.hibernate.loader.Loader.SELECT;
 public interface RegistrationFormRepository extends JpaRepository<RegistrationForm, Long> {
 
     @Query("SELECT r from RegistrationForm r WHERE  r.identifierNo = ?1")
-    void findByIdentifierNo(String identifierNo);
+    RegistrationForm findByIdentifierNo(String identifierNo);
+
+    @Query("SELECT r from RegistrationForm r WHERE r.email = ?1")
+    RegistrationForm findByEmail(String email);
 }

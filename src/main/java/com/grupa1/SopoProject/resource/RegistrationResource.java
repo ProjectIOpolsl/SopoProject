@@ -1,6 +1,8 @@
 package com.grupa1.SopoProject.resource;
 
-import com.grupa1.SopoProject.RegistrationFormService;
+import com.grupa1.SopoProject.handlers.AccountAleadyExistsException;
+import com.grupa1.SopoProject.handlers.RegistrationFormAlreadyExistsException;
+import com.grupa1.SopoProject.service.RegistrationFormService;
 import com.grupa1.SopoProject.database.Neighbourhood;
 import com.grupa1.SopoProject.database.RegistrationForm;
 import com.grupa1.SopoProject.dto.WSError;
@@ -18,8 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.xml.ws.Response;
 
 /**
  * @author Michal on 22.12.2018
@@ -45,9 +45,16 @@ public class RegistrationResource {
     })
     @PostMapping(value = "/register", produces = "application/json")
     public ResponseEntity<?> register(@RequestBody WSRegistrationForm registrationForm){
-        if(!registrationFormService.validateRegistrationForm(registrationForm)){
-            return new ResponseEntity<>(new WSError("User with such identifier have already sent" +
-                    "request for enrollment","/registration/register"), HttpStatus.BAD_REQUEST);
+        boolean isValid=true;
+        try {
+            isValid = registrationFormService.validateRegistrationForm(registrationForm);
+        } catch (RegistrationFormAlreadyExistsException e) {
+            return new ResponseEntity<>(new WSError(e.getMessage(),"/registration/register"), HttpStatus.BAD_REQUEST);
+        } catch (AccountAleadyExistsException e) {
+            return new ResponseEntity<>(new WSError(e.getMessage(),"/registration/register"), HttpStatus.BAD_REQUEST);
+        }
+        if(!isValid){
+            return new ResponseEntity<>(new WSError("Incorrect data passed","/registration/register"), HttpStatus.BAD_REQUEST);
         }
         //TODO hardcoded
         Neighbourhood neighbourhood = neighbourhoodRepository.findByName("Wojska Polskiego");
