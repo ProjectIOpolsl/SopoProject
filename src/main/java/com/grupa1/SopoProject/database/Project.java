@@ -36,7 +36,7 @@ public class Project extends AuditItem{
     @JoinColumn(name = "neighbourhoodId")
     private Neighbourhood neighbourhood;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 2000)
     private String description;
 
     @Column(name = "address")

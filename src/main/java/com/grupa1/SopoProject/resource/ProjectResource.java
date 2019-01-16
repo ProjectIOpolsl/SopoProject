@@ -2,6 +2,7 @@ package com.grupa1.SopoProject.resource;
 
 import com.grupa1.SopoProject.database.*;
 import com.grupa1.SopoProject.dto.*;
+import com.grupa1.SopoProject.forApiDocs.WSCreateNewProject;
 import com.grupa1.SopoProject.handlers.UserAlreadyVotedException;
 import com.grupa1.SopoProject.handlers.ValidationException;
 import com.grupa1.SopoProject.repositories.*;
@@ -48,7 +49,7 @@ public class ProjectResource {
     })
     @PostMapping(value = "/createProject", produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> createProject(@ApiParam(hidden = true) @RequestHeader("Authorization") String encoding,
-                                           @RequestBody WSProject wsProject){
+                                           @RequestBody WSCreateNewProject wsProject){
         String email = tokenUtil.getEmailFromToken(encoding);
         try{
             wsProject.validateData();
@@ -187,7 +188,7 @@ public class ProjectResource {
         WSListOfComments listOfComments = new WSListOfComments();
         if(project!=null){
             projectCommentList = project.getProjectComments() != null ? project.getProjectComments() : new ArrayList<>();
-            projectCommentList.stream().forEach( p -> listOfComments.addToList(new WSComment(p.getComment(),project.getId(),p.getEmial())));
+            projectCommentList.stream().forEach( p -> listOfComments.addToList(new WSCommentResponse(p.getComment(),project.getId(),p.getEmial())));
         }
         return new ResponseEntity<>(listOfComments,HttpStatus.OK);
     }

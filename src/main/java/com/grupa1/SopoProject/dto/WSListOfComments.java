@@ -20,9 +20,9 @@ public class WSListOfComments {
 
     @JsonProperty("listOfComments")
     @ApiModelProperty(notes = "list of comments")
-    public List<WSComment> listOfComments;
+    public List<WSCommentResponse> listOfComments;
 
-    public WSListOfComments(List<WSComment> listOfComments) {
+    public WSListOfComments(List<WSCommentResponse> listOfComments) {
         this.listOfComments = listOfComments;
     }
 
@@ -30,7 +30,7 @@ public class WSListOfComments {
         this.listOfComments = new ArrayList<>();
     }
 
-    public void addToList(WSComment projectComment){
+    public void addToList(WSCommentResponse projectComment){
         this.listOfComments.add(projectComment);
     }
 }
