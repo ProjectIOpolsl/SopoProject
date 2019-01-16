@@ -57,9 +57,6 @@ public class ProjectResource {
         } catch(InvalidProjectExcpetion ex){
             logger.info("Create project data validation failed: " + wsProject.getProjectName()+"\n"+ex.getMessage());
             return new ResponseEntity<>(new WSError(ex.getMessage(),"/projectManagement/createProject"),HttpStatus.BAD_REQUEST);
-        } catch (ValidationException ex){
-            logger.info("Create project data validation failed: " + wsProject.getProjectName());
-            return new ResponseEntity<>(new WSError(ex.getMessage(),"/projectManagement/createProject"),HttpStatus.BAD_REQUEST);
         }
         Neighbourhood neighbourhood = neighbourhoodRepository.findByName(wsProject.getNeighbourhood());
         if(neighbourhood == null){

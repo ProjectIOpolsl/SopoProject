@@ -38,7 +38,7 @@ public class WSProject implements DTO{
     @ApiModelProperty(notes = "Description of project", example = "Projekt fajnej")
     private String description;
 
-    @JsonProperty("Address")
+    @JsonProperty("address")
     @ApiModelProperty(notes = "Address", example = "Kamienna 15A")
     private String address;
 

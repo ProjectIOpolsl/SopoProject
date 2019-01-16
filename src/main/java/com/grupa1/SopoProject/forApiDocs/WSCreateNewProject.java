@@ -30,13 +30,11 @@ public class WSCreateNewProject {
     private String address;
 
 
-    public boolean validateData() throws ValidationException, InvalidProjectExcpetion {
+    public boolean validateData() throws InvalidProjectExcpetion {
         if(StringUtils.isBlank(projectName)){
-            throw new ValidationException("Project name");
-        } else if(budget == null){
-            throw new ValidationException("Budget");
+            throw new InvalidProjectExcpetion("Project does not contain 'Project name' field");
         } else if(StringUtils.isBlank(neighbourhood)){
-            throw new ValidationException("Neighbourhood");
+            throw new InvalidProjectExcpetion("Project does not specify neighbourhood in which project is planned");
         } else if(StringUtils.isBlank(description) || description.length() > 2000){
             throw new InvalidProjectExcpetion("Project doesn't have description or have too big. Constraint is set to 2000") ;
         }

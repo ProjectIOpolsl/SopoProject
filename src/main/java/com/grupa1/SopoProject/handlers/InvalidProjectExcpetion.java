@@ -5,7 +5,6 @@ package com.grupa1.SopoProject.handlers;
  */
 
 public class InvalidProjectExcpetion  extends Exception{
-
     public InvalidProjectExcpetion(String message) {
         super(message);
     }
