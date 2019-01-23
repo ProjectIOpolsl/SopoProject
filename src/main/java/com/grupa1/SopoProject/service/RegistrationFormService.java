@@ -63,10 +63,6 @@ public class RegistrationFormService {
                 throw new RegistrationFormAlreadyExistsException("User with such email have already send registrationForm request");
             }
         }
-            Neighbourhood neighbourhood = neighbourhoodRepository.findByName(wsRegistrationForm.getNeighbourhood());
-            if (neighbourhood == null) {
-                throw new ValidationException("Neighbourhood was not provided or this field contains invalid value");
-            }
             if(StringUtils.isBlank(wsRegistrationForm.getFirstName()) || StringUtils.isBlank(wsRegistrationForm.getIdentifierNo())
                 || StringUtils.isBlank(wsRegistrationForm.getPassword()) ){
             throw new ValidationException("Missing fields on registration form and/or identifier/login/password");
