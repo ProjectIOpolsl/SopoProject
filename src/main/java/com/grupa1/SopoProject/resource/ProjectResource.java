@@ -135,9 +135,9 @@ public class ProjectResource {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Remove comment to project // NOT VALID")
+    @ApiOperation(value = "Remove comment to project")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Comment added succesfully", response = WSLoginResponse.class),
+            @ApiResponse(code = 200, message = "Comment removed succesfully"),
             @ApiResponse(code = 401, message = "Invalid token access or access denied", response = WSError.class),
             @ApiResponse(code = 403, message = "Forbidden access. Your account has been blocked", response = WSError.class)
     })

@@ -56,7 +56,10 @@ public class RegistrationResource {
         if(!isValid){
             return new ResponseEntity<>(new WSError("Incorrect data passed","/registration/register"), HttpStatus.BAD_REQUEST);
         }
-        Neighbourhood neighbourhood = neighbourhoodRepository.findByName("Wojska Polskiego");
+        Neighbourhood neighbourhood = neighbourhoodRepository.findByName(registrationForm.getNeighbourhood());
+        if(neighbourhood == null){
+            neighbourhood = neighbourhoodRepository.findByName("UNKNOWN");
+        }
         RegistrationForm objectToPersist = new RegistrationForm(registrationForm.getFirstName(),
                 registrationForm.getSurname(),registrationForm.getAge(),neighbourhood,
                 registrationForm.getIdentifierNo(),registrationForm.getEmail(),registrationForm.getPassword());
@@ -66,7 +69,7 @@ public class RegistrationResource {
 
     @ApiOperation(value = "Accept registration form send by citizen")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Declined registration form succeed"),
+            @ApiResponse(code = 200, message = "Acceptance of registration form succeed"),
             @ApiResponse(code = 401, message = "Denied access to this endpoint"),
             @ApiResponse(code = 400, message = "Invalid request data")
     })

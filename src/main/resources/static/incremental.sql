@@ -7,6 +7,7 @@ INSERT INTO neighbourhood VALUES (6,CURRENT_TIMESTAMP,1,null,null,null,null,"Zat
 INSERT INTO neighbourhood VALUES (7,CURRENT_TIMESTAMP,1,null,null,null,null,"Trójkąt");
 INSERT INTO neighbourhood VALUES (8,CURRENT_TIMESTAMP,1,null,null,null,null,"Łabędy");
 INSERT INTO neighbourhood VALUES (9,CURRENT_TIMESTAMP,1,null,null,null,null,"Żerniki");
+INSERT INTO neighbourhood VALUES (10,CURRENT_TIMESTAMP,1,null,null,null,null,"UNKNOWN");
 
 
 INSERT INTO address VALUES(1,CURRENT_TIMESTAMP,1,null,null,null,null,"GLIWICE","22","KOZIELSKA",1);
