@@ -40,9 +40,8 @@ public class RegistrationFormService {
     private AccountRepository accountRepository;
 
     public boolean validateRegistrationForm(WSRegistrationForm wsRegistrationForm) throws RegistrationFormAlreadyExistsException, AccountAleadyExistsException, ValidationException {
-        if(wsRegistrationForm.getAddress() == null ){
+        if(StringUtils.isBlank(wsRegistrationForm.getAddress()) ){
             throw new ValidationException("Address was not provided or this field contains invalid value");
-
         }
         if (StringUtils.isBlank(wsRegistrationForm.getFirstName()) || StringUtils.isBlank(wsRegistrationForm.getSurname())){
             throw new ValidationException("First name or surname was not provided or this field contains invalid value");

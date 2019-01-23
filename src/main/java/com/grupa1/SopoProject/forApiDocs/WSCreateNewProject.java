@@ -39,7 +39,6 @@ public class WSCreateNewProject {
             throw new InvalidProjectExcpetion("Project doesn't have description or have too big. Constraint is set to 2000") ;
         } else if(StringUtils.isBlank(address) || address.length() >=255){
             throw new InvalidProjectExcpetion("Project does not contain 'Address' field or this property is badly formatted") ;
-
         }
         return  true;
     }
