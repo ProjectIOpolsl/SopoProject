@@ -112,6 +112,11 @@ public class ProjectResource {
     @PostMapping(value = "/addCommentToProject", produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> addCommentToProject(@ApiParam(hidden = true) @RequestHeader("Authorization") String encoding,
                                                  @RequestBody WSComment wsComment){
+        try{
+            wsComment.validateData();
+        } catch(javax.validation.ValidationException exc){
+            return new ResponseEntity<>(new WSError(exc.getMessage(),"/projectManagement/addCommentToProject"),HttpStatus.BAD_REQUEST);
+        }
         String email = tokenUtil.getEmailFromToken(encoding);
         try{
         Project project = projectRepository.searchById(wsComment.getProjectId());

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.validation.ValidationException;
 
 /**
  * @author Michal on 09.01.2019
@@ -31,5 +34,12 @@ public class WSComment implements DTO{
         this.comment = comment;
         this.projectId = projectId;
         this.email = email;
+    }
+
+    public boolean validateData() {
+        if(StringUtils.isBlank(comment)){
+            throw new ValidationException("The comment field cannot be empty");
+        }
+        return true;
     }
 }
