@@ -2,6 +2,7 @@ package com.grupa1.SopoProject.resource;
 
 import com.grupa1.SopoProject.handlers.AccountAleadyExistsException;
 import com.grupa1.SopoProject.handlers.RegistrationFormAlreadyExistsException;
+import com.grupa1.SopoProject.handlers.ValidationException;
 import com.grupa1.SopoProject.service.RegistrationFormService;
 import com.grupa1.SopoProject.database.Neighbourhood;
 import com.grupa1.SopoProject.database.RegistrationForm;
@@ -52,6 +53,9 @@ public class RegistrationResource {
             return new ResponseEntity<>(new WSError(e.getMessage(),"/registration/register"), HttpStatus.BAD_REQUEST);
         } catch (AccountAleadyExistsException e) {
             return new ResponseEntity<>(new WSError(e.getMessage(),"/registration/register"), HttpStatus.BAD_REQUEST);
+        } catch(ValidationException e){
+            return new ResponseEntity<>(new WSError(e.getMessage(),"/registration/register"), HttpStatus.BAD_REQUEST);
+
         }
         if(!isValid){
             return new ResponseEntity<>(new WSError("Incorrect data passed","/registration/register"), HttpStatus.BAD_REQUEST);
