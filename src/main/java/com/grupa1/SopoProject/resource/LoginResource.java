@@ -32,7 +32,6 @@ import java.util.List;
 /**
  * @author Michal on 05.12.2018
  */
-
 @RestController
 @RequestMapping("/login")
 @Api(value = "Login resource", description = "Endpoints for entering main application",

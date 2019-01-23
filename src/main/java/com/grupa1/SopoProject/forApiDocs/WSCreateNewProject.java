@@ -31,8 +31,8 @@ public class WSCreateNewProject {
 
 
     public boolean validateData() throws InvalidProjectExcpetion {
-        if(StringUtils.isBlank(projectName)){
-            throw new InvalidProjectExcpetion("Project does not contain 'Project name' field");
+        if(StringUtils.isBlank(projectName) && projectName.length() >= 255){
+            throw new InvalidProjectExcpetion("Project does not contain 'Project name' field or this property is badly formatted");
         } else if(StringUtils.isBlank(neighbourhood)){
             throw new InvalidProjectExcpetion("Project does not specify neighbourhood in which project is planned");
         } else if(StringUtils.isBlank(description) || description.length() > 2000){

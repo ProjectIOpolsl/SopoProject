@@ -56,7 +56,6 @@ public class RegistrationResource {
         if(!isValid){
             return new ResponseEntity<>(new WSError("Incorrect data passed","/registration/register"), HttpStatus.BAD_REQUEST);
         }
-        //TODO hardcoded
         Neighbourhood neighbourhood = neighbourhoodRepository.findByName("Wojska Polskiego");
         RegistrationForm objectToPersist = new RegistrationForm(registrationForm.getFirstName(),
                 registrationForm.getSurname(),registrationForm.getAge(),neighbourhood,

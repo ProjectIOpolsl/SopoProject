@@ -80,7 +80,7 @@ public class ProjectResource {
     })
     @PostMapping(value = "/deleteProject", produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> deleteProject(@RequestBody WSProject wsProject){
-        //TODO postponed implementation
+        // Futher implementation when needed. Presenting on Swagger UI
         return null;
     }
 
@@ -138,7 +138,7 @@ public class ProjectResource {
     })
     @PostMapping(value = "/removeCommentToProject", produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> removeCommentFromProject(){
-        //Todo implement later
+        // Futher implementation when needed. Presenting on Swagger UI
         return null;
     }
 
@@ -170,7 +170,6 @@ public class ProjectResource {
                 return new ResponseEntity<>(new WSError(ex.getMessage(),"/projectManagement/voteForProject/project/"+projectId),HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-
         return new ResponseEntity<>(new WSProject(project.getId(),project.getProjectName(),project.getBudget(),
                 project.getNeighbourhood().getNeighbourhoodName(),project.getDescription(),project.getAddress(),project.getVoteAmount()),HttpStatus.OK);
     }
